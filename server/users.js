@@ -2,7 +2,7 @@ import newDatabase from "./database.js";
 
 // Change this boolean to true if you wish to keep your
 // users between restart of your application
-const isPersistent = false;
+const isPersistent = true;
 export const database = newDatabase({ isPersistent });
 
 // Create middlewares required for routes defined in app.js
