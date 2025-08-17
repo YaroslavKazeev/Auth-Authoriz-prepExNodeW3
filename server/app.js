@@ -17,14 +17,14 @@ app.post("/auth/register", async (req, res) => {
         .status(401)
         .json({ error: "Registration misses username or password." });
     } else {
-      const userSession = database.create({ username });
+      const userIDobject = database.create({ username });
       const saltRounds = 12;
 
       const hashedPassword = await hash(password, saltRounds);
-      const user = { username, password: hashedPassword };
+      const user = { id: userIDobject.id, password: hashedPassword };
       userDatabase.push(user);
 
-      res.status(201).json({ id: userSession.id, username });
+      res.status(201).json({ id: userIDobject.id, username });
     }
   } catch (error) {
     res.status(400).json({ message: "Authentication error" });
