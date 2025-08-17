@@ -84,6 +84,10 @@ app.get("/auth/profile", async (req, res) => {
   }
 });
 
+app.post("/auth/logout", async (req, res) => {
+  res.status(204).json({ message: "No content" });
+});
+
 // Serve the front-end application from the `client` folder
 app.use(express.static("client"));
 
