@@ -10,6 +10,8 @@ app.use(express.json());
 const userDatabase = [];
 let hashedPasswordObj;
 let user;
+const SECRET = "H6AIgu0wsGCH2mC6ypyRubiPoPSpV4t1";
+let token;
 const saltRounds = 12;
 
 // TODO: Create routes here, e.g. app.post("/register", .......)
@@ -29,7 +31,7 @@ app.post("/auth/register", async (req, res) => {
       res.status(201).json({ id: hashedPasswordObj.id, username });
     }
   } catch (error) {
-    res.status(400).json({ message: "Authentication error" });
+    res.status(500).json({ message: "Internal server error" });
     console.log(error.message);
   }
 });
@@ -50,9 +52,30 @@ app.post("/auth/login", async (req, res) => {
       if (!isPasswordCorrect) {
         res.status(401).json({ error: "User's credentials are invalid." });
       } else {
-        const SECRET = "H6AIgu0wsGCH2mC6ypyRubiPoPSpV4t1";
-        const token = jsonwebtoken.sign(id, SECRET);
+        token = jsonwebtoken.sign(id, SECRET);
         res.status(201).json({ token });
+      }
+    }
+  } catch (error) {
+    res.status(400).json({ message: "Authentication error" });
+    console.log(error.message);
+  }
+});
+
+app.get("/auth/profile", async (req, res) => {
+  try {
+    token = req.headers.authorization.split(" ")[1];
+    if (!token) {
+      res.status(401).json({ error: "Unauthorized." });
+    } else {
+      const decodedID = jsonwebtoken.verify(token, SECRET);
+      user = userDatabase.find((user) => user.id === decodedID);
+      if (!decodedID || !user) {
+        res
+          .status(400)
+          .json({ message: "User not found or the token is invalid" });
+      } else {
+        res.status(201).json({ username: user.username });
       }
     }
   } catch (error) {
