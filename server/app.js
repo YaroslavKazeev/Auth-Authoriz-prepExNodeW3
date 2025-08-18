@@ -2,8 +2,6 @@ import express from "express";
 import { hash, compare } from "bcrypt";
 import { database } from "./users.js";
 import jsonwebtoken from "jsonwebtoken";
-// TODO Use below import statement for importing middlewares from users.js for your routes
-// TODO import { ....... } from "./users.js";
 
 const app = express();
 app.use(express.json());
@@ -14,7 +12,6 @@ const SECRET = "H6AIgu0wsGCH2mC6ypyRubiPoPSpV4t1";
 let token;
 const saltRounds = 12;
 
-// TODO: Create routes here, e.g. app.post("/register", .......)
 app.post("/auth/register", async (req, res) => {
   try {
     const { username, password } = req.body;
